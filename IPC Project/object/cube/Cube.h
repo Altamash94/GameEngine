@@ -1,5 +1,5 @@
 #ifndef CUBE_H
-
+#define CUBE_H
 #include "./../Object.h"
 #include <iostream>
 class Cube : public Object
@@ -10,6 +10,4 @@ public:
     void InitializeBuffers(float* vertices, int size);
     void Draw() const;
 };
-
-#define CUBE_H
 #endif // !CUBE_H

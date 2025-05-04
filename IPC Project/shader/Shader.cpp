@@ -10,9 +10,15 @@ Shader::Shader() {
 	fragmentShaderSource = nullptr;
 }
 
+Shader::~Shader()
+{
+	glDeleteProgram(ID);
+}
+
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
 	CompilerShader(vertexPath, fragmentPath);
+	glValidateProgram(ID);
 }
 
 bool Shader::CompilerShader(const char* vertexPath, const char* fragmentPath)
@@ -50,6 +56,8 @@ bool Shader::CompilerShader(const char* vertexPath, const char* fragmentPath)
 		success = false;
 		return false;
 	}
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 	return true;
 }
 

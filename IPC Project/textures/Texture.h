@@ -1,4 +1,5 @@
 #ifndef TEXTURE_H
+#define TEXTURE_H
 #include <iostream>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -19,6 +20,4 @@ private:
 	int width, height, nrChannels;
 	unsigned char* data;
 };
-
-#define TEXTURE_H
 #endif // !TEXTURE_H

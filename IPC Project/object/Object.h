@@ -1,4 +1,5 @@
 #ifndef OBJECT_H
+#define OBJECT_H
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -26,6 +27,4 @@ protected:
 	Shader* shader = nullptr;
 	std::vector<Texture*> textures;
 };
-
-#define OBJECT_H
 #endif // !OBJECT_H

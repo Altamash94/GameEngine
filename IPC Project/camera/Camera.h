@@ -1,5 +1,5 @@
 #ifndef CAMERA_H
-
+#define CAMERA_H
 
 #include <iostream>
 #include "glad/glad.h"
@@ -31,5 +31,5 @@ private:
 	bool firstMouse;
 	double yaw, pitch;
 };
-#define CAMERA_H
+
 #endif // !CAMERA_H

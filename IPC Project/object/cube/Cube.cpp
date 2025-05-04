@@ -80,7 +80,7 @@ void Cube::Draw() const{
 		std::cout << "Shader not set for the cube object." << std::endl;
 		return;
 	}
-	shader->use();
+	//shader->use(); //called in main program to avoid frequent state change
 	for (int i = 0; i < textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);

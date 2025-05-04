@@ -26,6 +26,7 @@ int main(int argc, char* argv[])
 
 	Cube cube;
 	cube.SetShader(&shader);
+	shader.use();
 	cube.AddTexture(&container);
 	cube.AddTexture(&face);
 
@@ -40,7 +41,6 @@ int main(int argc, char* argv[])
 		processInput(window);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		shader.use();
 		
 		model = glm::mat4(1.0f);
 		view = glm::mat4(1.0f);
@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
 		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		std::cout << "FPS: " << 1.0f / deltaTime << std::endl;
 	}
 
 
