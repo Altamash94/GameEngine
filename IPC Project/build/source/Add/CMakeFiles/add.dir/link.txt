@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libadd.so -o libadd.so CMakeFiles/add.dir/Add.cpp.o 

@@ -1,0 +1,5 @@
+add_subdirectory(object)
+add_subdirectory(shader)
+add_subdirectory(textures)
+add_subdirectory(Add)
+add_subdirectory(Camera)
