@@ -1,34 +1,30 @@
 #include "header.h"
-#ifndef SHADER_DIR
-#define SHADER_DIR "/home/altamash/Documents/CMakeTest/build/install/bin/shader/"
-#endif
+
 int main(int argc, char* argv[])
 {
-	
-
 	{
-		if (initializeGLFW() == 0)
-		{
+		if (initializeGLFW() == 0){
 			std::cout << "Failed to initialize OpenGL\n";
 			return -1;
 		}
 		camera = new CameraDebug(WIDTH, HEIGHT);
-		Shader shader(SHADER_DIR"vertexShader.glsl", 
-				SHADER_DIR"fragmentShader.glsl");
-		shader.use();
-		Texture container("source/textures/textures/container.jpg", 
-				"container");
-		shader.SetInt("container", 0);
-		Texture face("source/textures/textures/awesomeface.png", "face");
-		shader.SetInt("face", 1);
-		glm::mat4 model, view, projection;
-		projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-		shader.SetMat4("projection", projection);
 		Cube cube;
-		cube.SetShader(&shader);
+		
+		Shader shader(SHADER_DIR"vertexShader.glsl", SHADER_DIR"fragmentShader.glsl");
 		shader.use();
+		
+		Texture container("source/textures/textures/container.jpg", "container");
+		Texture face("source/textures/textures/awesomeface.png", "face");
+		shader.SetInt("container", 0);
+		shader.SetInt("face", 1);
+		shader.SetMat4("projection", camera->GetProjectionMatrix());
+		glm::mat4 model;
+		cube.SetShader(&shader);
 		cube.AddTexture(&container);
 		cube.AddTexture(&face);
+
+		
+		/**/
 		
 		glEnable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
@@ -42,11 +38,8 @@ int main(int argc, char* argv[])
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			
 			model = glm::mat4(1.0f);
-			view = glm::mat4(1.0f);
-			view = camera->GetViewMatrix();
-			projection = glm::mat4(1.0f);
-			shader.SetMat4("model", model);
-			shader.SetMat4("view", view);
+			shader.use();
+			shader.SetMat4("view", camera->GetViewMatrix());
 
 			for (unsigned int i = 0; i < 10; i++)
 			{
@@ -58,10 +51,9 @@ int main(int argc, char* argv[])
 			}
 			glBindVertexArray(0);
 			
-			camera->DrawDebug();
+			camera->DrawCameraOrientation();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-			//break;
 		}
 
 	}
@@ -72,7 +64,7 @@ int main(int argc, char* argv[])
 
 int initializeGLFW() 
 {
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
@@ -98,6 +90,20 @@ int initializeGLFW()
 	{
 		std::cout << "Failed to initialize GLAD\n";
 		return 0;
+	}
+
+	// Check if we actually have a context
+	if (glGetString(GL_VERSION) == nullptr) {
+		std::cerr << "No valid OpenGL context!" << std::endl;
+	} else {
+		std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+		std::cout << "GLSL Version: "   << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+		std::cout << "Renderer: "       << glGetString(GL_RENDERER) << std::endl;
+		std::cout << "Vendor: "         << glGetString(GL_VENDOR) << std::endl;
+	}
+	if(!glCreateShader){
+		std::cerr << "ERROR: glCreateShader is NULL (GLAD failed)" << std::endl;
+		exit(EXIT_FAILURE);
 	}
 
 	glfwSetCursorPosCallback(window, CursorPositionCallback);

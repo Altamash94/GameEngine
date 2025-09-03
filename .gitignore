@@ -2,5 +2,6 @@ IPC Project/external/.*zip
 IPC Project/external/glad-master
 IPC Project/external/glfw-3.4
 IPC Project/external/glm-1.0.1-light
+IPC Project/build
 x64
 .vs

@@ -1,0 +1,4 @@
+D:/Projects/GameEngine/GameEngine/IPC Project/external/glad/build/install/lib/libglad.dll.a
+D:/Projects/GameEngine/GameEngine/IPC Project/external/glad/build/install/lib/libglad.dll
+D:/Projects/GameEngine/GameEngine/IPC Project/external/glad/build/install/include/glad/glad.h
+D:/Projects/GameEngine/GameEngine/IPC Project/external/glad/build/install/include/glad/khrplatform.h

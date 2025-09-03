@@ -7,14 +7,11 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-#include "../shader/Shader.h"
-#ifndef SHADER_DIR
-#define SHADER_DIR "/home/altamash/Documents/CMakeTest/build/install/bin/shader/"
-#endif
 
 class Camera
 {
 public:
+	Camera(int width, int height);
 	Camera();
 	enum MoveDirection { FRONT, BACK, LEFT, RIGHT };
 	void Move(MoveDirection direciton, double deltaTime);
@@ -24,7 +21,9 @@ public:
 	glm::vec3 cameraFront;
 	virtual glm::mat4 GetViewMatrix() const;
 	virtual void DrawDebug() = 0;
-	Shader debugShader;
+	virtual void DrawCameraOrientation() = 0;
+	glm::mat4 GetProjectionMatrix() const{ return projection; };
+	int width, height;
 protected:
 	glm::vec3 cameraUp;
 	glm::vec3 cameraRight;
@@ -32,6 +31,8 @@ protected:
 	double xOffset, yOffset, lastX, lastY;
 	bool firstMouse;
 	double yaw, pitch;
+	float fovy, aspect, near, far;
+	glm::mat4 projection;
 };
 
 #endif // !CAMERA_H

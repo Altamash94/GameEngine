@@ -1,15 +1,18 @@
 cmake_minimum_required(VERSION 3.18.1)
-project(MyAddLibrary VERSION 0.0.1 DESCRIPTION "Object library")
+project(object VERSION 0.0.1 DESCRIPTION "Object library")
 
-set(External_Directory ${CMAKE_SOURCE_DIR}/external)
-set(GladSrc ${External_Directory}/glad/src/gl.c)
+add_library(${PROJECT_NAME} SHARED Object.cpp)
 
-add_library(object SHARED Object.cpp)
-target_include_directories(object PRIVATE ${CMAKE_SOURCE_DIR}/external/glad/include)
-set(LIBDIR ${CMAKE_SOURCE_DIR}/build/install/lib)
-set(HEADERDIR ${CMAKE_SOURCE_DIR}/build/install/include/object)
+#set includes and libs
+foreach(include_dir IN LISTS my_include_dirs)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${include_dir})
+endforeach()
+target_link_libraries(${PROJECT_NAME} PRIVATE glad glfw shader)
 
-install(TARGETS object DESTINATION ${LIBDIR})
-install(FILES Object.h DESTINATION ${HEADERDIR} )
+#installs
+install(TARGETS ${PROJECT_NAME} DESTINATION ${install_lib_dir})
+install(FILES Object.h DESTINATION ${install_header_dir})
+
 
 add_subdirectory(cube)
+add_subdirectory(DebugLines)

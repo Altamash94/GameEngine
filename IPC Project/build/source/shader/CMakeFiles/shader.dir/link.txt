@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libshader.so -o libshader.so CMakeFiles/shader.dir/Shader.cpp.o 

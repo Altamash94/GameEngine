@@ -19,10 +19,12 @@ Shader::~Shader()
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
+	success = true;
+	vertexShader = -1;
 	if (!CompilerShader(vertexPath, fragmentPath)) {
 		std::cerr << "Shader program creation failed!" << std::endl;
 		ID = 0; // Mark as invalid
-		return; // ❗️FIX: Stop further execution
+		exit(EXIT_FAILURE); // ❗️FIX: Stop further execution
 	}
 
 	glValidateProgram(ID); // only if compiled and linked successfully
@@ -36,6 +38,11 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 bool Shader::CompilerShader(const char* vertexPath, const char* fragmentPath)
 {
 	success = true;
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))	
+	{
+		std::cout << "Failed to initialize GLAD\n";
+		exit(EXIT_FAILURE);
+	}
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	ID = glCreateProgram();
@@ -122,7 +129,6 @@ std::string Shader::GetSource(const char* path)
     {
         std::stringstream buffer;
         buffer << file.rdbuf();
-        //std::cout << "Shader source from " << path << ":\n" << buffer.str() << std::endl; // ADDED
         file.close();
         return buffer.str();
     }

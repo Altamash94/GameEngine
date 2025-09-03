@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libcube.so -o libcube.so CMakeFiles/cube.dir/Cube.cpp.o 

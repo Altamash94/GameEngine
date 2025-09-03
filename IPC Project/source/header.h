@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <unistd.h>
+#define GLAD_GL_IMPLEMENTATION
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -9,6 +11,7 @@
 #include "shader/Shader.h"
 #include "textures/Texture.h"
 #include "object/cube/Cube.h"
+#include "object/DebugLines/DebugLine.h"
 
 
 
@@ -36,6 +39,7 @@ glm::vec3 cubePositions[] = {
 };
 
 void PreDrawCheckErrors();
+
 void PostDrawCheckErrors();
 
 void processInput(GLFWwindow* window)
@@ -69,7 +73,6 @@ void PreDrawCheckErrors()
                          GL_DEBUG_SEVERITY_NOTIFICATION, (GLsizei)strlen(msg), msg);
 }
 
-
 void PostDrawCheckErrors() 
 {
     GLenum err;
@@ -81,8 +84,6 @@ void PostDrawCheckErrors()
     glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 2,
                          GL_DEBUG_SEVERITY_NOTIFICATION, (GLsizei)strlen(msg), msg);
 }
-
-
 
 
 //Debug

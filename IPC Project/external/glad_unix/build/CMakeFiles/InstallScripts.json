@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"D:/Projects/GameEngine/GameEngine/IPC Project/external/glad/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

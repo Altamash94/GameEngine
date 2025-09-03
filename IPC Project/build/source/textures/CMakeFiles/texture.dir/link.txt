@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libtexture.so -o libtexture.so CMakeFiles/texture.dir/Texture.cpp.o 

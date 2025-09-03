@@ -1,8 +1,7 @@
 #include "Camera.h"
 
 
-Camera::Camera():
-debugShader(SHADER_DIR"lineVertex.glsl", SHADER_DIR"lineFragment.glsl")
+Camera::Camera(int width, int height): width(width), height(height)
 {
 	position = glm::vec3(0.0f, 0.0f, 3.0f);
 	cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -15,7 +14,12 @@ debugShader(SHADER_DIR"lineVertex.glsl", SHADER_DIR"lineFragment.glsl")
 	lastY = -1;
 	yaw = -89.0f;
 	pitch = 0.0f;
-	sensitivity = 0.005f;
+	sensitivity = 0.01f;
+	aspect = (float)width / (float)height;
+    fovy = glm::radians(45.0f);
+	near = 0.1f;
+	far = 100.0f;
+    projection = glm::perspective(fovy, aspect, near, far);
 }
 
 void Camera::Move(MoveDirection direction, double deltaTime)
@@ -65,15 +69,7 @@ void Camera::CursorMovement(double xPos, double yPos, float deltaTime)
 	pitch = 89.0f;
 	if (pitch < -89.0f)
 	pitch = -89.0f;
-	//debug
-	//float x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	//float y = sin(glm::radians(pitch));  // Vertical component
-	//std::cout << "Offset (" << xOffset << ", " << yOffset << ")" << std::endl;
-	//std::cout << "yaw, pitch (" << yaw << ", " << pitch << ")" << std::endl;
-	//std::cout << "(x,y) (" << x << ", " << y << ")" << std::endl;
-	//std::cout << std::endl;
-
-	
+		
 	updateCameraVectors();
 }
 
@@ -92,3 +88,7 @@ glm::mat4 Camera::GetViewMatrix() const
 	{
 		return glm::lookAt(position, position + cameraFront, cameraUp);
 	}
+
+Camera::Camera()
+{
+}

@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.18.1)
-project(CubeLibrary VERSION 0.0.1 DESCRIPTION "Cube library for creation of cube")
+project(cube VERSION 0.0.1 DESCRIPTION "Cube library for creation of cube")
 
 add_library(cube SHARED Cube.cpp)
-target_include_directories(cube PRIVATE ${CMAKE_SOURCE_DIR}/external/glad/include)
-set(LIBDIR ${CMAKE_SOURCE_DIR}/build/install/lib)
-set(HEADERDIR ${CMAKE_SOURCE_DIR}/build/install/include)
+foreach(include_dir IN LISTS my_include_dirs)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${include_dir})
+endforeach()
+target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+target_link_libraries(${PROJECT_NAME} PRIVATE shader)
+target_link_libraries(${PROJECT_NAME} PRIVATE object)
 
-install(TARGETS cube DESTINATION ${LIBDIR})
-install(FILES Cube.h DESTINATION ${HEADERDIR} )
+#installs
+install(TARGETS ${PROJECT_NAME} DESTINATION ${install_lib_dir})
+install(FILES Cube.h DESTINATION ${install_header_dir})

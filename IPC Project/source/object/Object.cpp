@@ -2,6 +2,11 @@
 
 Object::Object()
 {
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))	
+	{
+		std::cout << "Failed to initialize GLAD\n";
+		exit(EXIT_FAILURE);
+	}
 	model = glm::mat4(1.0f);
 	VAO = -1;
 	VBO = -1;
