@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18.1)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 PROJECT(GameEngine VERSION 0.1.0)
@@ -20,6 +20,18 @@ else()
     return()
 endif()
 
+function(setup_rpath target)
+    set_target_properties(${target} PROPERTIES
+        INSTALL_RPATH "$ORIGIN/../lib"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
+endfunction()
+
+option(ENABLE_LOGGING "Enable logging" OFF)
+if (ENABLE_LOGGING)
+    add_compile_definitions(DEBUG)
+endif()
+
 
 set(my_include_dirs 
     ${CMAKE_SOURCE_DIR}/external 
@@ -31,10 +43,9 @@ add_subdirectory(source)
 
 set(SOURCES source/main.cpp ${CMAKE_CURRENT_SOURCE_DIR}/external/${glad_folder_name}/src/glad.c)
 
-set(CMAKE_INSTALL_RPATH ${install_lib_dir})
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+setup_rpath(GameEngine)
 foreach(include_dir IN LISTS my_include_dirs)
     target_include_directories(${PROJECT_NAME} PRIVATE ${include_dir})
 endforeach()

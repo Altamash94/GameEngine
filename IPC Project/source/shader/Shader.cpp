@@ -24,33 +24,24 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 	if (!CompilerShader(vertexPath, fragmentPath)) {
 		std::cerr << "Shader program creation failed!" << std::endl;
 		ID = 0; // Mark as invalid
-		exit(EXIT_FAILURE); // ❗️FIX: Stop further execution
 	}
 
 	glValidateProgram(ID); // only if compiled and linked successfully
-	std::cout << "Shaders successfully compiled" << std::endl;
-	std::cout << vertexPath << std::endl;
-	std::cout << fragmentPath << std::endl;
-	std::cout << ID << std::endl;
 }
 
 
 bool Shader::CompilerShader(const char* vertexPath, const char* fragmentPath)
 {
 	success = true;
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))	
-	{
-		std::cout << "Failed to initialize GLAD\n";
-		exit(EXIT_FAILURE);
-	}
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	ID = glCreateProgram();
-	std::cout << "Created program ID: " << ID << std::endl;
 	std::string vertexSource = GetSource(vertexPath);
 	std::string fragmentSource = GetSource(fragmentPath);
 	vertexShaderSource = vertexSource.c_str();
 	fragmentShaderSource = fragmentSource.c_str();
+	vname = vertexShaderSource;
+	fname = fragmentShaderSource;
 
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
@@ -58,6 +49,7 @@ bool Shader::CompilerShader(const char* vertexPath, const char* fragmentPath)
 	{
 		success = false;
 		std::cout << vertexPath << "Compilation failed" << std::endl;
+		throw std::runtime_error("Shader compilation failed");
 		return false;
 	}
 	
@@ -67,6 +59,7 @@ bool Shader::CompilerShader(const char* vertexPath, const char* fragmentPath)
 	{
 		success = false;
 		std::cout << fragmentPath << "Compilation failed" << std::endl;
+		throw std::runtime_error("Shader compilation failed");
 		return false;
 	}
 
@@ -177,6 +170,10 @@ bool Shader::SetVec3(const std::string &name, glm::vec3 value) const
 }
 
 void Shader::PrintAllUniforms() const{
+
+	std::cout << vname << std::endl;
+	std::cout << fname << std::endl;
+
     GLint count;
     glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &count);
 

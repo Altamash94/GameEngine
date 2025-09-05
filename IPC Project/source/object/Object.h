@@ -14,30 +14,36 @@
 #include "./../Camera/Camera.h"
 
 #ifndef SHADER_DIR
-#define SHADER_DIR "D:\\Projects\\GameEngine\\GameEngine\\IPC Project\\build\\install\\bin\\shader\\"
+    #if defined(_WIN32)
+        #define SHADER_DIR "D:\\Projects\\GameEngine\\GameEngine\\IPC Project\\build\\install\\bin\\shader\\"
+    #elif defined(__linux__)
+        #define SHADER_DIR "/home/altamash/Documents/temp/GE/GameEngine/IPC Project/build/install/bin/shader/"
+    #else
+        #error "Unknown platform. Please define SHADER_DIR manually."
+    #endif
 #endif
+
 
 enum SPACE{WORLD_SPACE = 0, VIEW_SPACE = 1, CAMERA_SPACE = 2};
 
 class Object
 {
 public:
-	Object();
+	Object(const char* vertexShaderFile, const char* fragmentShaderFile);
+	virtual ~Object();
 	glm::mat4 model;
 	virtual void Draw() const = 0;
 	void SetModel(float angle, glm::vec3 axis, glm::vec3 position, glm::vec3 scale);
-	virtual ~Object();
-	void SetShader(const char* vertexShaderFile, const char* fragmentShaderFile);
-	void SetShader(Shader* shader);
-	void AddTexture(Texture* texture);
-	void SetCamera(Camera* camera) { this->camera = camera; }
+	void SetCamera(std::shared_ptr<Camera> camera);
+	void AddTexture(const char* texturePath, const char* uniformName, int id);
 	SPACE space = WORLD_SPACE;
 protected:
 	virtual void InitializeBuffers(float* vertices, int size) = 0;
 	unsigned int VBO, VAO;
-	Camera *camera = nullptr;
-	Shader* shader = nullptr;
-	std::vector<Texture*> textures;
-	
+	std::shared_ptr<Camera> camera;
+	std::unique_ptr<Shader> shader;
+	std::vector<std::unique_ptr<Texture>> textures;
+	void PreDrawCheckErrors() const;
+	void PostDrawCheckErrors() const;
 };
 #endif // !OBJECT_H

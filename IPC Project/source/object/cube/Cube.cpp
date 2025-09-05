@@ -1,7 +1,7 @@
 #include "Cube.h"
 
 
-Cube::Cube() :Object()
+Cube::Cube(const char* vertexShader, const char* fragmentShader) :Object(vertexShader, fragmentShader)
 {
     float vertices[] = {
        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -51,6 +51,7 @@ Cube::Cube() :Object()
 
 Cube::~Cube()
 {
+    std::cout << "Deleting object cube" << std::endl;
 }
 
 void Cube::InitializeBuffers(float* vertices, int size)
@@ -75,12 +76,14 @@ void Cube::InitializeBuffers(float* vertices, int size)
 }
 
 void Cube::Draw() const{
-	if (shader == nullptr)
-	{
-		std::cout << "Shader not set for the cube object." << std::endl;
-		return;
-	}
-	//shader->use(); //called in main program to avoid frequent state change
+    PreDrawCheckErrors();
+	shader->use();
+    PreDrawCheckErrors();
+    shader->SetMat4("model", model);
+    PreDrawCheckErrors();
+    shader->SetMat4("view", camera->GetViewMatrix());
+    PreDrawCheckErrors();
+    shader->SetMat4("projection", camera->GetProjectionMatrix());
 	for (int i = 0; i < textures.size(); i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
@@ -89,6 +92,8 @@ void Cube::Draw() const{
 	}
 
     glBindVertexArray(VAO);
+    PreDrawCheckErrors();
     glDrawArrays(GL_TRIANGLES, 0, 36); // Assuming 36 vertices for a cube
+    PostDrawCheckErrors();
     glBindVertexArray(0);
 }

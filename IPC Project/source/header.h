@@ -14,17 +14,11 @@
 #include "object/DebugLines/DebugLine.h"
 
 
-
-int initializeGLFW();
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
 const int WIDTH = 600, HEIGHT = 480;
 double deltaTime = 0.0f;
 double lastFrame = 0.0f;
-
 GLFWwindow* window;
-Camera* camera = nullptr;
-
+std::shared_ptr<Camera> camera;
 glm::vec3 cubePositions[] = {
     glm::vec3(0.0f,  0.0f,  0.0f),
     glm::vec3(2.0f,  5.0f, -15.0f),
@@ -38,52 +32,10 @@ glm::vec3 cubePositions[] = {
     glm::vec3(-1.3f,  1.0f, -1.5f)
 };
 
-void PreDrawCheckErrors();
-
-void PostDrawCheckErrors();
-
-void processInput(GLFWwindow* window)
-{
-    double cameraSpeed = 2.5f * deltaTime;
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera->Move(Camera::MoveDirection::FRONT, cameraSpeed);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera->Move(Camera::MoveDirection::BACK, cameraSpeed);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera->Move(Camera::MoveDirection::LEFT, cameraSpeed);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera->Move(Camera::MoveDirection::RIGHT, cameraSpeed);
-}
+int initializeGLFW();
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
+void processInput(GLFWwindow* window);
+
 void CursorPositionCallback(GLFWwindow* window, double x, double y);
-
-void PreDrawCheckErrors()
-{
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR) {
-        std::cerr << "GL error pre-draw: " << std::hex << err << std::dec << std::endl;
-    }
-
-    const char* msg = "Before drawing line";
-    glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 1,
-                         GL_DEBUG_SEVERITY_NOTIFICATION, (GLsizei)strlen(msg), msg);
-}
-
-void PostDrawCheckErrors() 
-{
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR) {
-        std::cerr << "GL error post-draw: " << std::hex << err << std::dec << std::endl;
-    }
-
-    const char* msg = "After drawing line";
-    glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 2,
-                         GL_DEBUG_SEVERITY_NOTIFICATION, (GLsizei)strlen(msg), msg);
-}
-
-
-//Debug

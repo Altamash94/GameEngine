@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18.1)
 project(glad VERSION 0.0.1 DESCRIPTION "Glad header")
 
-add_library(glad SHARED src/glad.c)
+add_library(${PROJECT_NAME} SHARED src/glad.c)
 
 #set includes and libs
 foreach(include_dir IN LISTS my_include_dirs)

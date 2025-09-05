@@ -1,5 +1,4 @@
 #include "header.h"
-
 int main(int argc, char* argv[])
 {
 	{
@@ -7,27 +6,16 @@ int main(int argc, char* argv[])
 			std::cout << "Failed to initialize OpenGL\n";
 			return -1;
 		}
-		camera = new CameraDebug(WIDTH, HEIGHT);
-		Cube cube;
+		camera = std::make_shared<CameraDebug>(WIDTH, HEIGHT);
 		
-		Shader shader(SHADER_DIR"vertexShader.glsl", SHADER_DIR"fragmentShader.glsl");
-		shader.use();
-		
-		Texture container("source/textures/textures/container.jpg", "container");
-		Texture face("source/textures/textures/awesomeface.png", "face");
-		shader.SetInt("container", 0);
-		shader.SetInt("face", 1);
-		shader.SetMat4("projection", camera->GetProjectionMatrix());
-		glm::mat4 model;
-		cube.SetShader(&shader);
-		cube.AddTexture(&container);
-		cube.AddTexture(&face);
-
-		
-		/**/
+		Cube cube(SHADER_DIR"vertexShader.glsl", SHADER_DIR"fragmentShader.glsl");
+		cube.AddTexture("source/textures/textures/container.jpg", "container", 0);
+		cube.AddTexture("source/textures/textures/awesomeface.png", "face", 1);
+		cube.SetCamera(camera);
 		
 		glEnable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		while (!glfwWindowShouldClose(window))
 		{
 			double currentFrame = glfwGetTime();
@@ -36,28 +24,23 @@ int main(int argc, char* argv[])
 			processInput(window);
 			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
-			model = glm::mat4(1.0f);
-			shader.use();
-			shader.SetMat4("view", camera->GetViewMatrix());
 
 			for (unsigned int i = 0; i < 10; i++)
 			{
 				float angle = 20.0f * i;
-				glm::mat4 model = glm::mat4(1.0f);
 				cube.SetModel(glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f), cubePositions[i], glm::vec3(1.0f));
-				shader.SetMat4("model", cube.model);
 				cube.Draw();
 			}
 			glBindVertexArray(0);
 			
 			camera->DrawCameraOrientation();
+			//camera->DrawDebug();
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
 
 	}
-	delete camera;
+	camera.reset(); 
 	glfwTerminate();
 	return 0;
 }
@@ -101,13 +84,11 @@ int initializeGLFW()
 		std::cout << "Renderer: "       << glGetString(GL_RENDERER) << std::endl;
 		std::cout << "Vendor: "         << glGetString(GL_VENDOR) << std::endl;
 	}
-	if(!glCreateShader){
-		std::cerr << "ERROR: glCreateShader is NULL (GLAD failed)" << std::endl;
-		exit(EXIT_FAILURE);
-	}
 
 	glfwSetCursorPosCallback(window, CursorPositionCallback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	if (glfwRawMouseMotionSupported())
+    	glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 	return 1;
 }
 
@@ -116,9 +97,22 @@ void CursorPositionCallback(GLFWwindow* window, double  x, double y)
 	camera->CursorMovement(x, y, deltaTime);
 }
 
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     if(width !=0 && height != 0)
 		glViewport(0, 0, width, height);
 }
 
+void processInput(GLFWwindow* window)
+{
+    double cameraSpeed = 2.5f * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera->Move(Camera::MoveDirection::FRONT, cameraSpeed);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera->Move(Camera::MoveDirection::BACK, cameraSpeed);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera->Move(Camera::MoveDirection::LEFT, cameraSpeed);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera->Move(Camera::MoveDirection::RIGHT, cameraSpeed);
+}

@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.18.1)
 project(camera VERSION 0.0.1 DESCRIPTION "Library to handle camera")
 
-set(CMAKE_INSTALL_RPATH ${install_lib_dir})
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 add_library(${PROJECT_NAME} SHARED Camera.cpp CameraDebug.cpp)
+setup_rpath(${PROJECT_NAME})
 
 
 #set includes and libs

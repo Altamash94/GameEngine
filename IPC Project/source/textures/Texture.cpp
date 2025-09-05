@@ -12,12 +12,12 @@ Texture::Texture(const char* path, const char* name): name(name)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	stbi_set_flip_vertically_on_load(true);
 
 	data = stbi_load(path, &width, &height, &nrChannels, 0);
 	if(data == nullptr)
 		std::cout << "Failed to load texture: " << path << std::endl;
 	
-	stbi_set_flip_vertically_on_load(true);
 
 	if (nrChannels == 1)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, data);
@@ -33,5 +33,6 @@ Texture::Texture(const char* path, const char* name): name(name)
 
 Texture::~Texture()
 {
+	std::cout << "Deleting texture " << name << std::endl;
 	glDeleteTextures(1, &textureID);
 }

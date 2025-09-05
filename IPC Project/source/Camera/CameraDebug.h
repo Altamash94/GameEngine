@@ -6,15 +6,16 @@
 
 class CameraDebug: public Camera{
 private:
-    glm::mat4 projection;
     DebugLine Worldlines, cameraOrientationLines;
 public:
     int width, height;
     GLuint yawVBO, pitchVBO, yawVAO, pitchVAO;
     CameraDebug(int width, int height);
+    virtual ~CameraDebug();
     void DrawDebug();
     void DrawCameraOrientation();
+#ifdef DEBUG
     void Print();
-    
+#endif
 };
 #endif // !CAMERADEBUG_H

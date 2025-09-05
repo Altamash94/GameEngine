@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.18.1)
 project(texture VERSION 0.0.1 DESCRIPTION "texture library")
 
 add_library(texture SHARED Texture.cpp)
+setup_rpath(${PROJECT_NAME})
 
 #set includes and libs
 foreach(include_dir IN LISTS my_include_dirs)

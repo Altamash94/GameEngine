@@ -14,10 +14,17 @@ Camera::Camera(int width, int height): width(width), height(height)
 	lastY = -1;
 	yaw = -89.0f;
 	pitch = 0.0f;
-	sensitivity = 0.01f;
+#if defined(_WIN32)
+	sensitivity = 0.1f;
+#elif defined(__linux__)
+	sensitivity = 2.0f;
+#else
+	sensitivity = 1.0f;
+#endif
+
 	aspect = (float)width / (float)height;
     fovy = glm::radians(45.0f);
-	near = 0.1f;
+	near = 0.05f;
 	far = 100.0f;
     projection = glm::perspective(fovy, aspect, near, far);
 }
@@ -45,7 +52,6 @@ void Camera::Move(MoveDirection direction, double deltaTime)
 
 void Camera::CursorMovement(double xPos, double yPos, float deltaTime)
 {
-	//Debug
 	glm::vec3 start = position;
 	glm::vec3 end = position + cameraFront * 0.5f; // Short arrow
 	//
@@ -56,20 +62,18 @@ void Camera::CursorMovement(double xPos, double yPos, float deltaTime)
 		lastY = yPos;
 		return;
 	}
-	//std::cout << "PosXY (" << xPos << ", " << yPos << ")" << std::endl;
-	//std::cout << "LastXY (" << lastX << ", " << lastY << ")" << std::endl;
-	xOffset = (xPos - lastX) * sensitivity;// * deltaTime;
-	yOffset = (lastY - yPos) * sensitivity;// * deltaTime; // reversed since y-coordinates go from bottom to top
+	xOffset = (xPos - lastX) * sensitivity * deltaTime;
+	yOffset = (lastY - yPos) * sensitivity * deltaTime; // reversed since y-coordinates go from bottom to top
 	lastX = xPos;
 	lastY = yPos;
 	yaw += xOffset;
 	pitch += yOffset;
 	
-	if (pitch > 89.0f)
-	pitch = 89.0f;
-	if (pitch < -89.0f)
-	pitch = -89.0f;
-		
+	if (pitch > 89.0f) pitch = 89.0f;
+	if (pitch < -89.0f) pitch = -89.0f;
+	if (yaw > 360.0f) yaw -= 360.0f;
+	if (yaw < 0.0f)yaw += 360.0f;
+
 	updateCameraVectors();
 }
 
@@ -91,4 +95,11 @@ glm::mat4 Camera::GetViewMatrix() const
 
 Camera::Camera()
 {
+}
+
+void Camera::DrawDebug(){}
+void Camera::DrawCameraOrientation(){}
+Camera::~Camera()
+{
+	std::cout << "Deleting camera" << std::endl;
 }

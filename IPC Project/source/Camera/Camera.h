@@ -2,17 +2,20 @@
 #define CAMERA_H
 
 #include <iostream>
+#include <memory>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-class Camera
+class Camera 
 {
 public:
 	Camera(int width, int height);
 	Camera();
+	virtual ~Camera();
+	//std::shared_ptr<Camera> GetInstance();
 	enum MoveDirection { FRONT, BACK, LEFT, RIGHT };
 	void Move(MoveDirection direciton, double deltaTime);
 	void CursorMovement(double xPos, double yPos, float deltaTime);
@@ -33,6 +36,7 @@ protected:
 	double yaw, pitch;
 	float fovy, aspect, near, far;
 	glm::mat4 projection;
+	int mXPos, mYPos;
 };
 
 #endif // !CAMERA_H

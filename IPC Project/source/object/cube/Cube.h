@@ -6,7 +6,8 @@ class Cube : public Object
 {
 public:
     Cube();
-    ~Cube();
+    Cube(const char* vertexShader, const char* fragmentShader);
+    virtual ~Cube();
     void InitializeBuffers(float* vertices, int size);
     void Draw() const;
 };

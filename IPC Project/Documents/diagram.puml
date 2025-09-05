@@ -1,0 +1,65 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Camera {
+    +float sensitivity
+    +vec3 position
+    +vec3 cameraFront
+    +mat4 GetViewMatrix() const
+    +mat4 GetProjectionMatrix() const
+    +Move(MoveDirection direction, double deltaTime)
+    +CursorMovement(double xPos, double yPos, float deltaTime)
+    +DrawDebug()
+    +DrawCameraOrientation()
+}
+
+class CameraDebug {
+    -DebugLine Worldlines
+    -DebugLine cameraOrientationLines
+    +DrawDebug()
+    +DrawCameraOrientation()
+}
+
+Camera <|-- CameraDebug
+
+class Object {
+    +SPACE space
+    +mat4 model
+    +Draw() const
+    +SetModel(float angle, vec3 axis, vec3 position, vec3 scale)
+    +SetCamera(shared_ptr<Camera> camera)
+    +AddTexture(const char* texturePath, const char* uniformName, int id)
+}
+
+class DebugLine {
+    -vector<vertex> lines
+    +AddLine(vec3 start, vec3 end, vec3 color)
+    +Draw() const
+    +UpdateBuffer()
+}
+
+Object <|-- DebugLine
+
+class Cube {
+    +InitializeBuffers(float* vertices, int size)
+    +Draw() const
+}
+
+Object <|-- Cube
+
+class Shader {
+    +ID
+    +use()
+    +SetInt(string name, int value)
+    +SetMat4(string name, mat4 value)
+    +SetVec3(string name, vec3 value)
+}
+
+class Texture {
+    +Bind()
+}
+
+Object --> Shader
+Object --> Texture
+CameraDebug --> DebugLine
+@enduml
