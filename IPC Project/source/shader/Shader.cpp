@@ -19,6 +19,10 @@ Shader::~Shader()
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))	
+	{
+		std::cout << "Failed to initialize GLAD\n";
+	}
 	success = true;
 	vertexShader = -1;
 	if (!CompilerShader(vertexPath, fragmentPath)) {

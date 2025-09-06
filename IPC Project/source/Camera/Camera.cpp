@@ -15,7 +15,7 @@ Camera::Camera(int width, int height): width(width), height(height)
 	yaw = -89.0f;
 	pitch = 0.0f;
 #if defined(_WIN32)
-	sensitivity = 0.1f;
+	sensitivity = 0.05f;
 #elif defined(__linux__)
 	sensitivity = 2.0f;
 #else
@@ -62,8 +62,8 @@ void Camera::CursorMovement(double xPos, double yPos, float deltaTime)
 		lastY = yPos;
 		return;
 	}
-	xOffset = (xPos - lastX) * sensitivity * deltaTime;
-	yOffset = (lastY - yPos) * sensitivity * deltaTime; // reversed since y-coordinates go from bottom to top
+	xOffset = (xPos - lastX) * sensitivity;// * deltaTime;
+	yOffset = (lastY - yPos) * sensitivity;// * deltaTime; // reversed since y-coordinates go from bottom to top
 	lastX = xPos;
 	lastY = yPos;
 	yaw += xOffset;
