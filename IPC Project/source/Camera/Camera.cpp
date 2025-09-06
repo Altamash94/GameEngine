@@ -17,10 +17,11 @@ Camera::Camera(int width, int height): width(width), height(height)
 #if defined(_WIN32)
 	sensitivity = 0.05f;
 #elif defined(__linux__)
-	sensitivity = 2.0f;
+	sensitivity = 0.05f;
 #else
 	sensitivity = 1.0f;
 #endif
+	std::cout << "cursor sesitivity " << sensitivity << std::endl;
 
 	aspect = (float)width / (float)height;
     fovy = glm::radians(45.0f);
